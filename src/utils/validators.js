@@ -15,4 +15,19 @@ const userValidator = Joi.object({
     }),
 })
 
-export default {userValidator}
+const bankAccountLinkValidator = Joi.object({
+    account_number: Joi.string().min(8).required().messages({
+        "number.empty": "Account number is required",
+        "number.min" : "Account Number must be of 8 characters"
+    }),
+    ifsc_code: Joi.string().min(6).required().messages({
+        "string.empty": "IFSC code is requires",
+        "string.min": "IFSC code should have atleast 6 characters"
+    }),
+    balance: Joi.number().positive().messages({
+        "number.positive": "Account balance could not be negative"
+    })
+
+})
+
+export default {userValidator, bankAccountLinkValidator}
