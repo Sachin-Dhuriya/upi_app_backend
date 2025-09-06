@@ -7,9 +7,9 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --runInBand",
     "start": "nodemon server.js",
-    "migrate": "knex migrate:latest",
-    "rollback": "knex migrate:rollback",
-    "seed": "knex seed:run"
+    "migrate": "knex migrate:latest --knexfile knexfile.cjs",
+    "rollback": "knex seed:run --knexfile knexfile.cjs",
+    "seed": "knex seed:run --knexfile knexfile.cjs"
   },
   "keywords": [],
   "author": "",
