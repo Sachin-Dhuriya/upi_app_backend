@@ -85,8 +85,7 @@ Server will run on → `http://localhost:4000`
 {
   "name": "Alice",
   "email": "alice@example.com",
-  "password": "123456",
-  "upi_id": "alice@upi"
+  "password": "123456"
 }
 ```
 ✅ Creates a new user with hashed password.
@@ -139,8 +138,9 @@ Header: `Authorization: Bearer <token>`
 #### 1. Send Money
 `POST /api/transaction/send`  
 ```json
-{
-  "to_user_id": 2,
+{   
+  "fromAccountId": 1,
+  "to_upi_id": "alice@upi",
   "amount": 1000
 }
 ```
