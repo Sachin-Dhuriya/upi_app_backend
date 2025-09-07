@@ -1,8 +1,8 @@
 {
   "info": {
-    "name": "UPI App - Auth APIs",
+    "name": "UPI App - Auth & Bank APIs",
     "_postman_id": "12345678-abcd-efgh-ijkl-9876543210",
-    "description": "Postman collection for testing Auth APIs of UPI App Backend",
+    "description": "Postman collection for testing Auth and Bank APIs of UPI App Backend",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -11,10 +11,7 @@
       "request": {
         "method": "POST",
         "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
+          { "key": "Content-Type", "value": "application/json" }
         ],
         "body": {
           "mode": "raw",
@@ -31,11 +28,15 @@
       "response": [
         {
           "name": "Register Success",
-          "originalRequest": {},
           "status": "Created",
           "code": 201,
-          "_postman_previewlanguage": "json",
           "body": "{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Sachin\",\n    \"email\": \"sachin@example.com\",\n    \"upi_id\": \"sachin@upi\"\n  }\n}"
+        },
+        {
+          "name": "Register Fail (User Exists)",
+          "status": "Bad Request",
+          "code": 400,
+          "body": "{\n  \"message\": \"User already exists\"\n}"
         }
       ]
     },
@@ -44,10 +45,7 @@
       "request": {
         "method": "POST",
         "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
+          { "key": "Content-Type", "value": "application/json" }
         ],
         "body": {
           "mode": "raw",
@@ -64,11 +62,15 @@
       "response": [
         {
           "name": "Login Success",
-          "originalRequest": {},
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": "json",
           "body": "{\n  \"message\": \"Login successful\",\n  \"token\": \"<JWT_TOKEN>\"\n}"
+        },
+        {
+          "name": "Login Fail (Invalid Password)",
+          "status": "Bad Request",
+          "code": 400,
+          "body": "{\n  \"message\": \"Invalid credentials\"\n}"
         }
       ]
     },
@@ -77,11 +79,7 @@
       "request": {
         "method": "GET",
         "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}",
-            "type": "text"
-          }
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
         ],
         "url": {
           "raw": "http://localhost:4000/api/auth/profile",
@@ -94,35 +92,91 @@
       "response": [
         {
           "name": "Profile Success",
-          "originalRequest": {},
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": "json",
           "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Sachin\",\n    \"email\": \"sachin@example.com\",\n    \"upi_id\": \"sachin@upi\"\n  }\n}"
         },
         {
           "name": "Profile Unauthorized (No Token)",
-          "originalRequest": {},
           "status": "Unauthorized",
           "code": 401,
-          "_postman_previewlanguage": "json",
           "body": "{\n  \"message\": \"No token provided\"\n}"
         },
         {
           "name": "Profile Forbidden (Invalid Token)",
-          "originalRequest": {},
           "status": "Forbidden",
           "code": 403,
-          "_postman_previewlanguage": "json",
           "body": "{\n  \"message\": \"Invalid token\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Link Bank Account",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"account_number\": \"1234567890\",\n  \"ifsc\": \"SBIN0001234\",\n  \"balance\": 5000.00\n}"
+        },
+        "url": {
+          "raw": "http://localhost:4000/api/bank/link",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "bank", "link"]
+        }
+      },
+      "response": [
+        {
+          "name": "Link Account Success",
+          "status": "Created",
+          "code": 201,
+          "body": "{\n  \"message\": \"Bank account linked successfully\",\n  \"account\": {\n    \"id\": 1,\n    \"account_number\": \"1234567890\",\n    \"ifsc\": \"SBIN0001234\",\n    \"balance\": \"5000.00\"\n  }\n}"
+        },
+        {
+          "name": "Link Account Fail (Duplicate)",
+          "status": "Bad Request",
+          "code": 400,
+          "body": "{\n  \"message\": \"Account number already linked\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Bank Accounts & Balances",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "http://localhost:4000/api/bank/balance",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "bank", "balance"]
+        }
+      },
+      "response": [
+        {
+          "name": "Get Balances Success",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"accounts\": [\n    {\n      \"id\": 1,\n      \"account_number\": \"1234567890\",\n      \"ifsc\": \"SBIN0001234\",\n      \"balance\": \"5000.00\"\n    }\n  ]\n}"
+        },
+        {
+          "name": "No Accounts Found",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"accounts\": []\n}"
         }
       ]
     }
   ],
   "variable": [
-    {
-      "key": "token",
-      "value": ""
-    }
+    { "key": "token", "value": "" }
   ]
 }

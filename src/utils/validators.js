@@ -30,4 +30,26 @@ const bankAccountLinkValidator = Joi.object({
 
 })
 
-export default {userValidator, bankAccountLinkValidator}
+const sendMoneyValidator = Joi.object({
+    fromAccountId: Joi.number().integer().required(),
+    to_upi_id: Joi.string().required().messages({
+        "string.empty": "Reciever UPI id required"
+    }),
+    amount: Joi.number().positive().precision(2).required().messages({
+    "number.base": "Amount must be a number",
+    "number.positive": "Amount must be greater than zero",
+    "any.required": "Amount is required"
+  })
+})
+
+const requestMoneyValidator = Joi.object({
+    to_user_id: Joi.number().integer().positive().required(),
+    amount: Joi.number().positive().required()
+})
+
+export const respondRequestValidator = Joi.object({
+  request_id: Joi.number().integer().positive().required(),
+  action: Joi.string().valid("Accepted", "Rejected").required()
+});
+
+export default {userValidator, bankAccountLinkValidator, sendMoneyValidator, requestMoneyValidator, respondRequestValidator}

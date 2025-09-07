@@ -11,5 +11,11 @@ export async function linkBankAccount(user_id, { account_number, ifsc_code, bala
 }
 
 export async function getAccountBalanceByUserId(userId) {
-    return await db("bank_accounts").where({user_id: userId}).select("account_number", "ifsc_code", "balance")
+    return await db("bank_accounts").where({user_id: userId}).select("id","account_number", "ifsc_code", "balance")
+}
+
+export async function getAccountById(accountId, userId) {
+  return db("bank_accounts")
+    .where({ id: accountId, user_id: userId })
+    .first();
 }

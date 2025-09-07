@@ -14,3 +14,7 @@ export async function createUser({name, email, password_hash, upi_id}) {
 export async function getUserById(id) {
     return await db("users").where({id}).first();
 }
+
+export async function getUserByUpiId(UpiId) {
+    return await db("users").where({upi_id : UpiId}).first();
+}
